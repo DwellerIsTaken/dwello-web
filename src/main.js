@@ -1,3 +1,22 @@
+import { createApp } from 'vue'
+import './style.css'
+import App from './App.vue'
+
+createApp(App).mount('#app')
+
+Vue.createApp({
+    data() {
+        return {
+            navItems: [
+                { name: 'Home', href: '#' },
+                { name: 'About', href: '#' },
+                { name: 'Support', href: '#' },
+                { name: 'Login', href: 'login.html' },
+            ]
+        };
+    }
+}).mount('nav');
+
 document.addEventListener('DOMContentLoaded', function () {
     var dimmingText = document.querySelector('.introduction-text');
     var body = document.body;
@@ -15,4 +34,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Listen for scroll events
     window.addEventListener('scroll', updateOpacity);
-    });
+});
