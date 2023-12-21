@@ -230,6 +230,10 @@ p::selection, a::selection, h1::selection, h2::selection, h3::selection, h4::sel
     align-items: center;
     margin-left: 100vw - 95%;
     animation: fade-up 2s;
+
+    /*transform: translate(-50%, -50%);*/
+    opacity: 1; /* Initial opacity */
+    transition: opacity 0.5s ease;
 }
 
 .introduction-text h1 {
