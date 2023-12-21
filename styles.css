@@ -22,13 +22,14 @@ body {
 
 a {
     color: #000000;
+    cursor: pointer;
 }
 
 p {
     color: #000000;
     font-family: 'Open Sans', sans-serif;
     font-weight: 550;
-    font-size: 18px;
+    font-size: 1.4rem;
 }
 
 p a {
@@ -62,24 +63,42 @@ h1 {
     user-select: none;
 }
 
-p::selection, h1::selection, h2::selection, h3::selection, h4::selection, h5::selection, h6::selection {
+p::selection, a::selection, h1::selection, h2::selection, h3::selection, h4::selection, h5::selection, h6::selection {
+    /* underline decoration should be white */
+    text-decoration-color: #ffffff;
     background-color: #000000;
     color: #ffffff;
 }
 
-.main {
+.global {
+    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
 }
 
+.main {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    z-index: 1;
+}
+
+.center {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
 .main-left {
-    width: 7.5%;
+    width: 11%;
     left: 0;
 }
 
 .main-right {
-    width: 7.5%;
+    width: 11%;
     right: 0;
 }
 
@@ -103,6 +122,7 @@ p::selection, h1::selection, h2::selection, h3::selection, h4::selection, h5::se
 
 .left-center {
     width: 50%;
+    height: 100%;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -112,10 +132,25 @@ p::selection, h1::selection, h2::selection, h3::selection, h4::selection, h5::se
 .right-center {
     right: 0;
     width: 50%;
+    height: 100%;
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
+}
+
+.main-footer {
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    opacity: 0;
+    height: 500px;
+    width: 100%;
+    z-index: -1;
+    padding-top: 150px;
+    color: #f7d938;
+    background-color: #AE8514;
 }
 
 .navbar-container {
@@ -133,6 +168,22 @@ p::selection, h1::selection, h2::selection, h3::selection, h4::selection, h5::se
     overflow: hidden;
 }
 
+.nav-item {
+    list-style-type: none;
+}
+
+.navbar ul {
+    padding: 0;
+}
+
+.nav-link {
+    font-weight: 800;
+    margin-top: 5rem;
+    font-size: 2.5rem;
+    position: relative;
+    text-decoration: none;
+}
+
 .logo {
     width: 33.333%;
     display: flex;
@@ -148,19 +199,14 @@ p::selection, h1::selection, h2::selection, h3::selection, h4::selection, h5::se
 }
 
 .underline-btn {
-    position: relative;
-    text-decoration: none;
     transition: color 0.3s ease-in-out;
-    font-weight: 800;
-    font-size: 2.5rem;
-    margin-top: 5rem;
 }
 
 .underline-btn::before {
     content: '';
     position: absolute;
     width: 0;
-    height: 0.16rem;
+    height: 0.1em;
     bottom: 0;
     right: 0;
     margin-bottom: -0.35rem;
@@ -225,4 +271,82 @@ p::selection, h1::selection, h2::selection, h3::selection, h4::selection, h5::se
 
 .invite-button:hover {
     transform: scale(1.08);
+}
+
+.login-logo {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    font-size: 20rem;
+}
+
+.login-rectangle {
+    width: 35rem;
+    height: 70rem;
+    background-color: #000000;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.slogan {
+    margin-top: 100px;
+    border-bottom: 2px solid #333333;
+}
+
+.slogan h1 {
+    font-size: 90px;
+}
+
+.about-columns {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 50px 0;
+    max-width: 500px;
+    max-height: 200px;
+}
+
+.bottom-column {
+    position: relative;
+    height: 100%;
+    margin-right: 40px;
+}
+
+.bottom-column:last-child {
+    margin-right: 0;
+}
+
+.bottom-column h3 {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: black;
+}
+
+.bottom-column ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.bottom-column li:hover {
+    cursor: pointer;
+}
+
+.bottom-column a {
+    display: block;
+    margin-bottom: 5px;
+    color: #333333;
+    text-decoration: none;
+    font-size: 25px;
+    font-weight: 600;
+    transition: color 0.5s ease;
+}
+
+.bottom-column a:hover {
+    color: #ccc;
+    cursor: pointer;
 }
