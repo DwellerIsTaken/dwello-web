@@ -1,98 +1,15 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="/src/style.css">
+    <link rel="stylesheet" type="text/css" href="/src/style.css" />
     <title>Dwello | Discord Bot</title>
   </head>
+
   <body>
-    <div id="app">
-        <div class="global">
-            <div class="main">
-                <div class="main-left"></div>
-                <div class="center">
-                    <div class="navbar-container unselectable">
-                        <div class="logo">
-                            <h1>Dwello<span class="small-r">®</span></h1>
-                        </div>
-                        <nav class="navbar">
-                            <ul v-for="(item, index) in navItems" :key="index">
-                                <li class="nav-item">
-                                    <a class="nav-link underline-btn" aria-current="page" :href="item.href">{{ item.name }}</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <div class="introduction-text">
-                        <h1>Looking for a cool Discord Bot?</h1><h1><a href="#">Invite me.</a></h1>
-                        <!--somehow add a newline when screen gets too wide in order to keep second sentence on a new line.-->
-                    </div>
-                    <div class="invite">
-                        <div class="left">
-                            <h1>Invite me, please.</h1>
-                            <p>
-                                Exciting news, Discord enthusiasts!
-                                Meet Dwello – your server's new dynamic companion, ready to revolutionize your Discord adventures.
-                                Dwello isn't just your typical bot; think of it as a hyper-energetic, tech-savvy sidekick with lightning-fast responses, rivaling a cheetah on a caffeine rush!
-                                We're so thrilled about this launch that our coffee mugs are getting more attention than our inboxes.
-                                But that's not all – Dwello boasts features so fantastic they make unicorns jealous, from meme-tastic commands to server management magic.
-                                Now, we're not just here to brag; we need your help to spread the joy
-                                Picture Dwello as the friend always up for a good time, and all we ask is for you to invite this digital dynamo to your server.
-                                Your support means the world, and Dwello promises to transform your server into the coolest spot in the Discord universe.
-                                So, what are you waiting for? Let's turn those servers into Dwello-icious hotspots together!
-                            </p>
-                            <div class="invite-button-container">
-                                <a href="#" class="invite-button">Invite to the server</a>
-                                <a href="#" class="invite-button">See features</a>
-                            </div>
-                        </div>
-                        <div class="right-center">
-                            <img src="images/d_app_logo.svg" alt="Discord Logo" width="500" height="500" style="margin-top: 10rem;">
-                        </div>
-                    </div>
-                </div>
-                <div class="main-right"></div>
-            </div>
-            <footer class="main-footer">
-                <div class="main-left"></div>
-                <div class="main-right"></div>
-            </footer>
-        </div>
-    </div>
+    <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
-
-<!--
-    <div class="slogan"><h1>DwelloBot®</h1></div>
-            <div class="about-columns">
-                <div class="bottom-column">
-                    <h3>Company</h3>
-                    <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Our Team</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                    </ul>
-                </div>
-                <div class="bottom-column">
-                    <h3>Products</h3>
-                    <ul>
-                        <li><a href="#">Product 1</a></li>
-                        <li><a href="#">Product 2</a></li>
-                        <li><a href="#">Product 3</a></li>
-                        <li><a href="#">Product 4</a></li>
-                    </ul>
-                </div>
-                <div class="bottom-column">
-                    <h3>Resources</h3>
-                    <ul>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">FAQs</a></li>
-                        <li><a href="#">Support</a></li>
-                    </ul>
-                </div>
-            </div>
--->
