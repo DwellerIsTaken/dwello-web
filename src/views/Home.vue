@@ -27,20 +27,18 @@
 </script>
 
 <template>
-  <div class="global">
     <div class="main">
-      <div class="main-left"></div>
+      <div class="col"></div>
       <div class="center">
         <NavBar />
-        <div class="introduction-text" ref="dimmingText">
-          <h1>Looking for a cool Discord Bot?</h1>
-          <h1><a href="#">Invite me.</a></h1>
+        <div class="py-80 flex flex-col items-center justify-center text-9xl opacity-100 transition-opacity duration-500 animate-fadeup" ref="dimmingText">
+          <h1 class="font-kanit">Looking for a cool Discord Bot? <a class="underline selection:decoration-white" href="#">Invite me.</a></h1>
           <!--somehow add a newline when screen gets too wide in order to keep second sentence on a new line.-->
+          <!--when selecting the black background can overlap some of the selected text above; at least for big headers.-->
         </div>
-
-        <div class="invite">
+        <div class="w-full flex relative">
           <div class="left">
-            <h1>Invite me, please.</h1>
+            <h1 class="text-8xl mb-6">Invite me, please.</h1>
             <p>
               Exciting news, Discord enthusiasts! Meet Dwello – your server's new
               dynamic companion, ready to revolutionize your Discord adventures.
@@ -58,9 +56,9 @@
               So, what are you waiting for? Let's turn those servers into
               Dwello-icious hotspots together!
             </p>
-            <div class="invite-button-container">
-              <a href="#" class="invite-button">Invite to the server</a>
-              <a href="#" class="invite-button">See features</a>
+            <div class="flex justify-between gap-5">
+              <a href="#" class="text-4xl p-4 mt-8 rounded border-4 border-solid border-black flex relative transition-transform duration-700 hover:scale-105">Invite to the server</a>
+              <a href="#" class="text-4xl p-4 mt-8 rounded border-4 border-solid border-black flex relative transition-transform duration-700 hover:scale-105">See features</a>
             </div>
           </div>
           <div class="right-center">
@@ -74,8 +72,7 @@
           </div>
         </div>
       </div>
-      <div class="main-right"></div>
+      <div class="col"></div>
     </div>
     <Footer />
-  </div>
 </template>

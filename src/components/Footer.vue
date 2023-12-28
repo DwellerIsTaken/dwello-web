@@ -21,13 +21,13 @@
 </script>
 
 <template>
-  <div class="main footer unselectable">
-    <div class="main-left"></div>
+  <div class="main z-0 h-96 bg-darkblue text-yellow unselectable">
+    <div class="col"></div>
     <div class="center">
-      <div class="slogan"><h1>DwelloBot®</h1></div>
-      <div class="about-columns">
-        <div class="bottom-column" style="width: 27em;">
-          <p class="slogan-text">
+      <div class="mt-4 w-full border-b-2 border-solid border-grey"><h1 class="text-7xl">DwelloBot®</h1></div>
+      <div class="flex items-start pt-12">
+        <div class="mr-12 w-96">
+          <p class="text-base">
             In a world marked by constant change, adaptability becomes a cornerstone of success.
             Embrace innovation and challenge the status quo.
             Navigate the complexities with curiosity and resilience.
@@ -35,22 +35,18 @@
             In every endeavor, foster connections, for genuine relationships fortify the human experience.
           </p>
         </div>
-        <div v-for="(links, category) in linksData" :key="category" class="bottom-column">
+        <div v-for="(links, category) in linksData" :key="category" class="relative mr-12">
           <ul v-for="(link, index) in links" :key="index">
-            <li class="footer-column-item">
-              <a class="footer-link" :href="link.href">{{ link.name }}</a>
+            <li>
+              <a class="block mb-1 text-2xl font-semibold hover:text-white transition-colors duration-300" :href="link.href">{{ link.name }}</a>
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <div class="main-right"></div>
+    <div class="col"></div>
   </div>
 </template>
-
-<style scoped>
-
-</style>
 
 <!--
   FIRST FOOTER CSS
