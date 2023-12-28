@@ -1,12 +1,10 @@
 <script setup>
-const navItems = {
-  navItems: [
+  const navItems = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Support", href: "/support" },
     { name: "Login", href: "/login" },
-  ],
-};
+  ];
 </script>
 
 <template>
