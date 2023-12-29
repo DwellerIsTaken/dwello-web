@@ -1,14 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
         'yellow': '#f7d938;',
+        'yhover': '#EBC90A;',
         'black': '#000000;',
         'darkblue': '#161F27;',
         'gray': '#333333;',
         'grey': '#333333;',
+        'placeholder': '#00000080;',
       },
       fontFamily: {
         'sans': ['Open Sans', 'sans-serif'],

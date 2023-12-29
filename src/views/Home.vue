@@ -36,7 +36,7 @@
           <!--somehow add a newline when screen gets too wide in order to keep second sentence on a new line.-->
           <!--when selecting the black background can overlap some of the selected text above; at least for big headers.-->
         </div>
-        <div class="w-full flex relative">
+        <div class="w-full flex relative mb-10">
           <div class="left">
             <h1 class="text-8xl mb-6">Invite me, please.</h1>
             <p>
@@ -63,11 +63,11 @@
           </div>
           <div class="right-center">
             <img
+              class="mt-7"
               src="/src/assets/discord.svg"
               alt="Discord Logo"
               width="500"
               height="500"
-              style="margin-top: 10rem"
             />
           </div>
         </div>
