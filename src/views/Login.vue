@@ -26,15 +26,16 @@
             <input type="text" id="email" name="email" class="w-80 h-10 rounded mb-3 placeholder:text-black focus:outline-none"
               :style="{ 'padding-left': showEmailIcon ? '24px' : '8px' }" placeholder="Email" v-model="emailInput" @input="toggleEmailIconVisibility">
           </div>
-          <div class="relative">
+          <div class="relative mb-1">
             <label for="psswd" class="text-yellow font-kanit font-semibold text-xl">Password</label><br>
             <div class="absolute top-10 left-1" v-if="showPasswordIcon">
               <img :src="linkDictionary['password-icon']" alt="Password Icon" class="w-4 h-4">
             </div>
             <input type="text" id="psswd" name="psswd" class="w-80 h-10 rounded placeholder:text-black focus:outline-none"
-            :style="{ 'padding-left': showPasswordIcon ? '24px' : '8px' }" placeholder="Password" v-model="passwordInput" @input="togglePasswordIconVisibility"><br><br>
+            :style="{ 'padding-left': showPasswordIcon ? '24px' : '8px' }" placeholder="Password" v-model="passwordInput" @input="togglePasswordIconVisibility"><br>
           </div>
-          <div class="text-center">
+          <a href="#" class="text-yellow hover:text-yhover">Forgot password?</a>
+          <div class="text-center mt-5">
             <input type="submit" value="Submit" class="bg-yellow text-black text-xl px-8 py-2 rounded font-kanit font-semibold hover:bg-yhover">
           </div>
         </form> 
@@ -57,7 +58,7 @@
               <span>Continue with Facebook</span>
           </button>
         </a>
-        <a href="#" class="mt-[7rem] text-yellow text-lg hover:text-yhover">Create your Account →</a>
+        <a href="#" class="mt-[5rem] text-yellow text-lg hover:text-yhover">Create your Account →</a>
       </div>
     </div>
     <div class="col"></div>
