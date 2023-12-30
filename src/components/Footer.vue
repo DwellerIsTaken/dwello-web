@@ -21,8 +21,8 @@
 </script>
 
 <template>
-  <div class="main z-0 h-96 bg-darkblue text-yellow unselectable">
-    <div class="col"></div>
+  <div class="w-full h-full flex flex-row fixed items-end pb-16 z-0 bottom-0 left-0 bg-darkblue text-yellow unselectable">
+    <div class="w-col"></div>
     <div class="center">
       <div class="mt-4 w-full border-b-2 border-solid border-grey"><h1 class="text-7xl">DwelloBot®</h1></div>
       <div class="flex items-start pt-12">
@@ -44,7 +44,7 @@
         </div>
       </div>
     </div>
-    <div class="col"></div>
+    <div class="w-col"></div>
   </div>
 </template>
 

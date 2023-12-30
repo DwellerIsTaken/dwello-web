@@ -13,6 +13,12 @@ export default {
         'grey': '#333333;',
         'placeholder': '#00000080;',
       },
+      width: {
+        'col': '15rem',
+      },
+      margin: {
+        'footer': '30rem',
+      },
       fontFamily: {
         'sans': ['Open Sans', 'sans-serif'],
         'roboto': ['Roboto', 'sans-serif'],

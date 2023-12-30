@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "locomotive-scroll": "^4.1.4",
+    "potiah": "^1.0.0-alpha.1",
     "vue": "^3.3.11",
     "vue-router": "4"
   },
