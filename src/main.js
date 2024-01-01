@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 import { createPotiah } from 'potiah'
+import PrimeVue from 'primevue/config';
 
 import App from "./App.vue";
 
@@ -12,6 +13,7 @@ import NewPassword from "./views/NewPassword.vue";
 import Test from "./views/Test.vue";
 
 import "./style.css";
+import "primevue/resources/themes/lara-light-green/theme.css";
 
 const routes = [
   { path: "/", component: Home },
@@ -31,5 +33,7 @@ app.use(router);
 
 const potiah = createPotiah()
 app.use(potiah)
+
+app.use(PrimeVue);
 
 app.mount("#app");

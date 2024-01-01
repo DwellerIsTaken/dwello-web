@@ -1,6 +1,13 @@
 <script setup>
+  import { ref } from "vue";
+  import Dropdown from 'primevue/dropdown';
+
+  const selectedDay = ref();
+  const selectedMonth = ref();
+  const selectedYear = ref();
+
   const dateOptions = {
-    day: [
+    Day: [
       { value: '', label: 'Day', disabled: true },
       { value: '---', label: '---', disabled: true },
       { value: '01', label: '01' },
@@ -35,7 +42,7 @@
       { value: '30', label: '30' },
       { value: '31', label: '31' }
     ],
-    month: [
+    Month: [
       { value: '', label: 'Month', disabled: true },
       { value: '-----', label: '-----', disabled: true },
       { value: '01', label: 'January' },
@@ -51,7 +58,7 @@
       { value: '11', label: 'November' },
       { value: '12', label: 'December' }
     ],
-    year: [
+    Year: [
       { value: '', label: 'Year', disabled: true },
       { value: '----', label: '----', disabled: true },
       { value: '2012', label: '2012' },
@@ -172,29 +179,33 @@
 </script>
 
 <template>
-  <div class="main h-screen unselectable">
+  <div class="h-screen unselectable">
     <div class="h-full w-full my-auto flex flex-col items-center justify-center">
       <h1 class="text-black font-kanit text-[10rem]">Sign Up</h1>
       <form action="/action_page.php">
         <div class="relative mb-3">
           <label for="email" class="text-black font-kanit font-semibold text-xl">Email*</label><br>
-          <input type="text" id="email" name="email" class="w-[26rem] h-12 rounded placeholder:text-black focus:outline-none"
+          <input type="text" id="email" name="email" class="w-[26rem] h-12 rounded placeholder:text-[#9ca3af] focus:outline-none"
             :style="{ 'padding-left': showEmailIcon ? '24px' : '8px' }" placeholder="Your email" v-model="emailInput" @input="toggleEmailIconVisibility">
         </div>
         <div class="relative mb-3">
           <label for="psswd" class="text-black font-kanit font-semibold text-xl">Password*</label><br>
-          <input type="text" id="psswd" name="psswd" class="w-[26rem] h-12 rounded placeholder:text-black focus:outline-none"
+          <input type="text" id="psswd" name="psswd" class="w-[26rem] h-12 rounded placeholder:text-[#9ca3af] focus:outline-none"
           :style="{ 'padding-left': showPasswordIcon ? '24px' : '8px' }" placeholder="Your password" v-model="passwordInput" @input="togglePasswordIconVisibility"><br>
         </div>
         <div class="relative">
           <label for="psswd" class="text-black font-kanit font-semibold text-xl">Date of Birth</label><br>
           <div class="flex flex-row justify-between">
-            <div v-for="(options, label) in dateOptions" :key="label">
-              <select v-model="selectedOptions[label]" class="h-12 w-32 rounded bg-white centered-select-text form-control">
-                <option v-for="option in options" :value="option.value" :key="option.value" :disabled="option.disabled">
-                  {{ option.label }}
-                </option>
-              </select>
+            <div v-for="(options, label) in dateOptions" :key="label" class="card flex justify-center items-center">
+              <div v-if="label === 'Day'">
+                <Dropdown v-model="selectedDay" editable :options="options" optionLabel="label" :placeholder="label" optionDisabled="disabled" class="h-12 w-32 rounded bg-white centered-select-text shadow-none placeholder:text-black"/>
+              </div>
+              <div v-else-if="label === 'Month'">
+                <Dropdown v-model="selectedMonth" editable :options="options" optionLabel="label" :placeholder="label" optionDisabled="disabled" class="h-12 w-32 rounded bg-white centered-select-text shadow-none"/>
+              </div>
+              <div v-else-if="label === 'Year'">
+                <Dropdown v-model="selectedYear" editable :options="options" optionLabel="label" :placeholder="label" optionDisabled="disabled" class="h-12 w-32 rounded bg-white centered-select-text shadow-none"/>
+              </div>
             </div>
           </div>
         </div>
@@ -207,27 +218,7 @@
 </template>
 
 <style scoped>
-  .centered-select-text {
-    text-align-last:center;
-  }
-
-  .form-control {
-    max-height: 100px; /* Adjust this value as needed */
-  }
+.centered-select-text {
+  text-align-last:center;
+}
 </style>
-
-<script>
-export default {
-  data() {
-    return {
-      selectedOptions: {
-        day: "",
-        month: "",
-        year: "",
-      },
-    };
-  },
-  computed: {},
-  methods: {},
-};
-</script>

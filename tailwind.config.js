@@ -8,16 +8,16 @@ export default {
         'yellow': '#f7d938;',
         'yhover': '#EBC90A;',
         'black': '#000000;',
-        'darkblue': '#161F27;',
-        'gray': '#333333;',
-        'grey': '#333333;',
+        'footer': '#1C1C21;',
+        'gray': '#6B6B71;',
+        'grey': '#6B6B71;',
         'placeholder': '#00000080;',
       },
       width: {
         'col': '15rem',
       },
       margin: {
-        'footer': '30rem',
+        'footer': '55rem',
       },
       fontFamily: {
         'sans': ['Open Sans', 'sans-serif'],
@@ -35,7 +35,7 @@ export default {
           '0%': { transform: 'translateY(2rem) scale(.9)', opacity: 0},
           '100%': { transform: 'translateY(0px) scale(1)', opacity: 1},
         }
-      }
+      },
     },
   },
   plugins: [

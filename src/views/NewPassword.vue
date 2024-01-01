@@ -1,5 +1,5 @@
 <template>
-  <div class="main h-screen unselectable">
+  <div class="h-screen unselectable">
     <div class="h-full w-full my-auto flex items-center justify-center">
       <div class="min-w-[35rem] h-[40rem] flex flex-col items-center justify-center border-4 border-solid border-black shadow-2xl">
         <img
