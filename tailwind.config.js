@@ -11,13 +11,15 @@ export default {
         'footer': '#1C1C21;',
         'gray': '#6B6B71;',
         'grey': '#6B6B71;',
+        'dark': '#161616;',
+        'white': '#EFEFEF;',
         'placeholder': '#00000080;',
       },
       width: {
-        'col': '15rem',
+        'col': '40rem', //29.6rem
       },
       margin: {
-        'footer': '55rem',
+        'footer': '40rem',
       },
       fontFamily: {
         'sans': ['Open Sans', 'sans-serif'],

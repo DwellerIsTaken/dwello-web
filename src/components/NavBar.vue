@@ -8,11 +8,11 @@
 </script>
 
 <template>
-  <div class="flex mt-3 unselectable">
-    <div class="w-1/3 flex items-center justify-start">
+  <div class="flex h-32 unselectable">
+    <div class="w-1/4 flex items-center justify-start"> <!-- adjust width based on the navitem len and font etc-->
       <h1 class="text-7xl">Dwello<span class="text-4xl align-top leading-10">®</span></h1>
     </div>
-    <nav class="w-2/3 flex justify-between items-center overflow-hidden">
+    <nav class="w-3/4 mt-5 flex justify-between items-center overflow-hidden">
       <ul v-for="(item, index) in navItems" :key="index">
         <li>
           <a
@@ -29,7 +29,7 @@
 
 <style scoped>
   .underline-btn {
-    @apply transition-colors duration-300 ease-in-out;
+    @apply transition-colors duration-300 ease-in-out text-grey;
   }
 
   .underline-btn::before {
@@ -41,7 +41,7 @@
     bottom: 0;
     right: 0;
     margin-bottom: -0.35rem;
-    background-color: #000000;
+    background-color: #6B6B71;
     transition: width 0.4s ease-in-out;
   }
 

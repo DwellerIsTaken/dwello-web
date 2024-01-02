@@ -27,32 +27,40 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 html.has-scroll-smooth {
     overflow: hidden;
 }
+
 html.has-scroll-dragging {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    
     user-select: none;
 }
+
 .has-scroll-smooth body {
     overflow: hidden;
 }
+
 .has-scroll-smooth [data-scroll-container] {
     min-height: 100vh;
 }
+
 [data-scroll-direction="horizontal"] [data-scroll-container] {
     height: 100vh;
     display: inline-block;
     white-space: nowrap;
 }
+
 [data-scroll-direction="horizontal"] [data-scroll-section] {
     display: inline-block;
     vertical-align: top;
     white-space: nowrap;
     height: 100%;
 }
+
 .c-scrollbar {
     position: absolute;
     right: 0;
@@ -63,14 +71,17 @@ html.has-scroll-dragging {
     transition: transform 0.3s, opacity 0.3s;
     opacity: 0;
 }
+
 .c-scrollbar:hover {
     transform: scaleX(1.45);
 }
+
 .c-scrollbar:hover,
 .has-scroll-scrolling .c-scrollbar,
 .has-scroll-dragging .c-scrollbar {
     opacity: 1;
 }
+
 [data-scroll-direction="horizontal"] .c-scrollbar {
     width: 100%;
     height: 10px;
@@ -78,9 +89,11 @@ html.has-scroll-dragging {
     bottom: 0;
     transform: scaleY(1);
 }
+
 [data-scroll-direction="horizontal"] .c-scrollbar:hover {
     transform: scaleY(1.3);
 }
+
 .c-scrollbar_thumb {
     position: absolute;
     top: 0;
@@ -93,10 +106,12 @@ html.has-scroll-dragging {
     cursor: -webkit-grab;
     cursor: grab;
 }
+
 .has-scroll-dragging .c-scrollbar_thumb {
     cursor: -webkit-grabbing;
     cursor: grabbing;
 }
+
 [data-scroll-direction="horizontal"] .c-scrollbar_thumb {
     right: auto;
     bottom: 0;
@@ -107,7 +122,7 @@ html {
 }
 
 body {
-    @apply bg-yellow text-black h-full m-0; 
+    @apply bg-dark text-black h-full m-0; 
 }
 
 a {
@@ -115,7 +130,7 @@ a {
 }
 
 p {
-    @apply text-paragraph font-sans font-medium;
+    @apply text-paragraph font-sans font-medium text-grey;
 }
 
 p a {
@@ -123,7 +138,7 @@ p a {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    @apply font-kanit font-bold;
+    @apply font-kanit font-bold text-white;
 }
 
 p::selection, a::selection, h1::selection, h2::selection, h3::selection, h4::selection, h5::selection, h6::selection {
@@ -132,7 +147,7 @@ p::selection, a::selection, h1::selection, h2::selection, h3::selection, h4::sel
 }
 
 .main {
-    @apply w-full h-full flex flex-row relative items-center justify-center bg-yellow bg-no-repeat z-50;
+    @apply w-full h-full flex flex-row relative items-center justify-center bg-dark bg-no-repeat z-50;
 }
 
 .center {
