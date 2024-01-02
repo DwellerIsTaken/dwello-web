@@ -13,6 +13,8 @@ export default {
         'grey': '#6B6B71;',
         'dark': '#161616;',
         'white': '#EFEFEF;',
+        'discord': '#5965f2;',
+        'blue': '#007BFF;',
         'placeholder': '#00000080;',
       },
       width: {

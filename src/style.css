@@ -159,7 +159,7 @@ p::selection, a::selection, h1::selection, h2::selection, h3::selection, h4::sel
 }
 
 .right {
-    @apply w-1/2 h-full right-0 flex items-start flex-col justify-center; 
+    @apply w-1/2 h-full right-0 flex items-end flex-col justify-center; 
 }
 
 .left-center {
