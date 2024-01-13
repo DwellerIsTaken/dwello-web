@@ -1,10 +1,5 @@
 <script setup>
-  import { ref } from "vue";
   import Dropdown from 'primevue/dropdown';
-
-  const selectedDay = ref();
-  const selectedMonth = ref();
-  const selectedYear = ref();
 
   const dateOptions = {
     Day: [
@@ -186,31 +181,31 @@
         <div class="relative mb-3">
           <label for="email" class="text-black font-kanit font-semibold text-xl">Email*</label><br>
           <input type="text" id="email" name="email" class="w-[26rem] h-12 rounded placeholder:text-[#9ca3af] focus:outline-none"
-            :style="{ 'padding-left': showEmailIcon ? '24px' : '8px' }" placeholder="Your email" v-model="emailInput" @input="toggleEmailIconVisibility">
+            :style="{ 'padding-left': showEmailIcon ? '24px' : '8px' }" placeholder="Your email" v-model="formData.email" @input="toggleEmailIconVisibility" required>
         </div>
         <div class="relative mb-3">
           <label for="psswd" class="text-black font-kanit font-semibold text-xl">Password*</label><br>
           <input type="text" id="psswd" name="psswd" class="w-[26rem] h-12 rounded placeholder:text-[#9ca3af] focus:outline-none"
-          :style="{ 'padding-left': showPasswordIcon ? '24px' : '8px' }" placeholder="Your password" v-model="passwordInput" @input="togglePasswordIconVisibility"><br>
+          :style="{ 'padding-left': showPasswordIcon ? '24px' : '8px' }" placeholder="Your password" v-model="formData.psswd" @input="togglePasswordIconVisibility" required><br>
         </div>
         <div class="relative">
-          <label for="psswd" class="text-black font-kanit font-semibold text-xl">Date of Birth</label><br>
+          <label for="psswd" class="text-black font-kanit font-semibold text-xl">Date of Birth*</label><br>
           <div class="flex flex-row justify-between">
-            <div v-for="(options, label) in dateOptions" :key="label" class="card flex justify-center items-center">
+            <div v-for="(options, label) in dateOptions" :key="label" class="card flex justify-center items-center"> <!--make date of b required-->
               <div v-if="label === 'Day'">
-                <Dropdown v-model="selectedDay" editable :options="options" optionLabel="label" :placeholder="label" optionDisabled="disabled" class="h-12 w-32 rounded bg-white centered-select-text shadow-none placeholder:text-black"/>
+                <Dropdown v-model="formData.day" editable :options="options" optionLabel="label" :placeholder="label" optionDisabled="disabled" class="h-12 w-32 rounded bg-white centered-select-text shadow-none placeholder:text-black"/>
               </div>
               <div v-else-if="label === 'Month'">
-                <Dropdown v-model="selectedMonth" editable :options="options" optionLabel="label" :placeholder="label" optionDisabled="disabled" class="h-12 w-32 rounded bg-white centered-select-text shadow-none"/>
+                <Dropdown v-model="formData.month" editable :options="options" optionLabel="label" :placeholder="label" optionDisabled="disabled" class="h-12 w-32 rounded bg-white centered-select-text shadow-none"/>
               </div>
               <div v-else-if="label === 'Year'">
-                <Dropdown v-model="selectedYear" editable :options="options" optionLabel="label" :placeholder="label" optionDisabled="disabled" class="h-12 w-32 rounded bg-white centered-select-text shadow-none"/>
+                <Dropdown v-model="formData.year" editable :options="options" optionLabel="label" :placeholder="label" optionDisabled="disabled" class="h-12 w-32 rounded bg-white centered-select-text shadow-none"/>
               </div>
             </div>
           </div>
         </div>
         <div class="text-center mt-10">
-          <input type="submit" value="Submit" class="bg-black text-yellow text-xl px-8 py-2 rounded font-kanit font-semibold hover:bg-[#141414]">
+          <input type="button" value="Submit" class="bg-black text-yellow text-xl px-8 py-2 rounded font-kanit font-semibold hover:bg-[#141414]" @click="submitForm">
         </div>
       </form> 
     </div>
@@ -222,3 +217,38 @@
   text-align-last:center;
 }
 </style>
+
+<script>
+import { ref } from "vue";
+
+export default {
+  data() {
+    return {
+      formData: {
+        name: '',
+        psswd: '',
+        day: ref(),
+        month: ref(),
+        year: ref(),
+      },
+    };
+  },
+  methods: {
+    submitForm() {
+      // Send data to the server
+      fetch('http://127.0.0.1:8000/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(this.formData),
+      })
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error('Error:', error));
+
+      console.log("posted");
+    },
+  },
+};
+</script>

@@ -87,7 +87,7 @@ section {
 </style>-->
 
 
-<script setup>
+<!--<script setup>
   import NavBar from "../components/NavBar.vue";
   import Footer from "../components/Footer.vue";
   import { ref, onMounted, onBeforeUnmount } from "vue";
@@ -254,6 +254,44 @@ export default {
 
       // Adjust the opacity based on the distance from the middle
       this.calculatedOpacity = 1 - distanceFromMiddle / 500;
+    },
+  },
+};
+</script>-->
+
+<template>
+  <div>
+    <form @submit.prevent="submitForm">
+      <!-- Your form fields go here -->
+      <input v-model="formData.value1" />
+      <input v-model="formData.value2" />
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      formData: {
+        value1: "",
+        value2: "",
+      },
+    };
+  },
+  methods: {
+    submitForm() {
+      // Use Axios to send the form data to the PHP backend
+      axios.post("http://your-backend-url/api.php", { formData: this.formData })
+        .then(response => {
+          // Handle the response (e.g., show a success message)
+          console.log(response.data);
+        })
+        .catch(error => {
+          // Handle the error (e.g., show an error message)
+          console.error(error);
+        });
     },
   },
 };
