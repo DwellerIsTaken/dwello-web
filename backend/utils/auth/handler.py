@@ -3,11 +3,11 @@ import time
 from typing import Dict
 
 import jwt
-#from ..environment import ENV
+from ..environment import ENV
 
 # fix env
-JWT_SECRET = "2a816a087989e32b5fbda8799ee4aab84a4866625c00480c81fb6ed86be95559" #ENV("JWT_SECRET")
-JWT_ALGORITHM = "HS256" #ENV("JWT_ALGORITHM")
+JWT_SECRET = ENV("JWT_SECRET")
+JWT_ALGORITHM = ENV("JWT_ALGORITHM")
 
 
 def token_response(token: str):
