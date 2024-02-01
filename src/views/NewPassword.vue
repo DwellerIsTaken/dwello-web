@@ -19,7 +19,7 @@
             <div class="absolute top-10 left-1" v-if="showEmailIcon">
               <img src="https://www.svgrepo.com/show/473860/email.svg" alt="Email Icon" class="w-4 h-4">
             </div>
-            <input type="text" id="email" name="email" class="w-80 h-10 rounded mb-3 placeholder:text-black focus:outline-none"
+            <input type="email" id="email" name="email" class="w-80 h-10 rounded mb-3 placeholder:text-black focus:outline-none"
               :style="{ 'padding-left': showEmailIcon ? '24px' : '8px' }" placeholder="Your email" v-model="emailInput" @input="toggleEmailIconVisibility">
           </div>
           <div class="flex justify-between mt-4">
@@ -48,7 +48,8 @@
       toggleEmailIconVisibility() {},
       goBack() {
         this.$router.go(-1);
-      }
+      },
+      
     },
   };
 </script>

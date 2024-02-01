@@ -24,14 +24,14 @@
     <div class="right-center h-screen">
       <div class="h-screen w-[50vw] bg-black flex flex-col items-center justify-center overflow-hidden">
         <h1 class="text-yellow font-kanit text-[11rem]">Login</h1>
-        <form action="/action_page.php">
+        <form ref="LoginForm">
           <div class="relative">
             <label for="email" class="text-yellow font-kanit font-semibold text-3xl">Email</label><br>
             <div class="absolute top-[3.25rem] left-1" v-if="showEmailIcon">
               <img :src="emailIcon" alt="Email Icon" class="w-4 h-4">
             </div>
-            <input type="text" id="email" name="email" class="h-12 rounded mb-3 placeholder:text-black placeholder:text-lg focus:outline-none" :class="defaultWidth"
-              :style="{ 'padding-left': showEmailIcon ? '24px' : '8px' }" placeholder="Email" v-model="emailInput" @input="toggleEmailIconVisibility">
+            <input type="email" id="email" name="email" class="h-12 rounded mb-3 placeholder:text-black placeholder:text-lg focus:outline-none" :class="defaultWidth"
+              :style="{ 'padding-left': showEmailIcon ? '24px' : '8px' }" placeholder="Email" required v-model="formData.email" @input="toggleEmailIconVisibility">
           </div>
           <div class="relative mb-1">
             <label for="psswd" class="text-yellow font-kanit font-semibold text-3xl">Password</label><br>
@@ -39,11 +39,11 @@
               <img :src="passwordIcon" alt="Password Icon" class="w-4 h-4">
             </div>
             <input type="text" id="psswd" name="psswd" class="h-12 rounded placeholder:text-black placeholder:text-lg focus:outline-none" :class="defaultWidth"
-            :style="{ 'padding-left': showPasswordIcon ? '24px' : '8px' }" placeholder="Password" v-model="passwordInput" @input="togglePasswordIconVisibility"><br>
+            :style="{ 'padding-left': showPasswordIcon ? '24px' : '8px' }" placeholder="Password" required v-model="formData.password" @input="togglePasswordIconVisibility"><br>
           </div>
           <a href="/send-password" class="text-yellow text-lg hover:text-yhover">Forgot password?</a>
           <div class="text-center mt-5">
-            <input type="submit" value="Submit" class="bg-yellow text-black text-xl px-10 py-3 rounded font-kanit font-semibold hover:bg-yhover">
+            <input type="button" value="Submit" class="bg-yellow text-black text-xl px-10 py-3 rounded font-kanit font-semibold hover:bg-yhover" @click="submitForm">
           </div>
         </form> 
         <div class="relative inline-flex items-center justify-center w-full py-10">
@@ -63,6 +63,80 @@
 </template>
 
 <script>
+export default {
+  data() {
+    return {
+      formData: {
+        email: '',
+        password: '',
+      },
+    };
+  },
+  computed: {
+    showEmailIcon() {
+      return this.formData.email.trim() === "";
+    },
+    showPasswordIcon() {
+      return this.formData.password.trim() === "";
+    },
+  },
+  methods: {
+    submitForm() {
+      const form = this.$refs.LoginForm;
+      const formElements = form.elements;
+
+      // Reset custom validity and remove red borders
+      for (const element of formElements) {
+        element.setCustomValidity('');
+        element.style.border = '';
+      }
+
+      if (form.checkValidity()) {
+        fetch('http://127.0.0.1:8000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.formData),
+        })
+        .then(response => {
+          if (!response.ok) {
+            // Handle non-successful response codes here
+            if (response.status === 422) {
+              // Handle 422 Unprocessable Entity
+              return response.json().then(errorData => {
+                // Tell them that email form is incorrect
+                throw new Error(`Validation error: ${JSON.stringify(errorData)}`);
+              });
+            } else {
+              // Handle other non-successful response codes
+              throw new Error(`Server error: ${response.status}`);
+            }
+          }
+          return response.json();
+        })
+        .then(data => {
+          localStorage.setItem("token", JSON.stringify(data));
+          console.log(data);
+          console.log(localStorage.getItem("token"));
+        })
+        .catch(error => console.error('Error:', error));
+
+      } else {
+        for (const element of formElements) {
+          if (!element.checkValidity()) {
+            // Some styling here or whatever
+            element.setCustomValidity('Please fill in this field');
+            element.style.border = '2px solid red';
+          }
+        }
+      }
+    },
+  },
+};
+</script>
+
+<!--
   export default {
     data() {
       return {
@@ -81,6 +155,51 @@
     methods: {
       toggleEmailIconVisibility() {},
       togglePasswordIconVisibility() {},
+      submitForm() {
+        // Send data to the server
+
+        const form = this.$refs.LoginForm;
+        const formElements = form.elements;
+
+        // Reset custom validity and remove red borders
+        for (const element of formElements) {
+          element.setCustomValidity('');
+          element.style.border = '';
+        }
+
+        // Check if the form is valid before submitting
+        if (form.checkValidity()) {
+          console.log("yo");
+          fetch('http://127.0.0.1:8000/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: this.emailInput,
+              password: this.passwordInput,
+            }),
+          })
+          .then(response => response.json())
+          .then(data => {
+            localStorage.setItem("token", JSON.stringify(data));
+            console.log(data);
+            console.log(localStorage.getItem("token"));
+          })
+          .catch(error => console.error('Error:', error));
+
+          console.log("posted");
+        } else {
+          // Highlight invalid fields with red borders
+          for (const element of formElements) {
+            if (!element.checkValidity()) {
+              // Some styling here or whatever
+              element.setCustomValidity('Please fill in this field');
+              element.style.border = '0.1em solid red';
+            }
+          }
+        }
+      },
     },
   };
-</script>
+-->

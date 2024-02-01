@@ -263,9 +263,7 @@ export default {
   <div>
     <form @submit.prevent="submitForm">
       <!-- Your form fields go here -->
-      <input v-model="formData.value1" />
-      <input v-model="formData.value2" />
-      <button type="submit">Submit</button>
+      <input type="button" value="Submit" @click="submitForm">
     </form>
   </div>
 </template>
@@ -275,23 +273,31 @@ export default {
   data() {
     return {
       formData: {
-        value1: "",
-        value2: "",
+        username: '3',
+        email: '4@dd.vom',
+        password: '4t34t35y3y3yr3r',
+        day: 2,
+        month: 3,
+        year: 4,
       },
     };
   },
   methods: {
     submitForm() {
-      // Use Axios to send the form data to the PHP backend
-      axios.post("http://your-backend-url/api.php", { formData: this.formData })
-        .then(response => {
-          // Handle the response (e.g., show a success message)
-          console.log(response.data);
+      fetch('http://127.0.0.1:8000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.formData),
         })
-        .catch(error => {
-          // Handle the error (e.g., show an error message)
-          console.error(error);
-        });
+        .then(response => response.json())
+        .then(data => {
+          localStorage.setItem("token", JSON.stringify(data));
+          console.log(data);
+          console.log(localStorage.getItem("token"));
+        })
+        .catch(error => console.error('Error:', error));
     },
   },
 };

@@ -177,19 +177,24 @@
   <div class="h-screen unselectable">
     <div class="h-full w-full my-auto flex flex-col items-center justify-center">
       <h1 class="text-black font-kanit text-[10rem]">Sign Up</h1>
-      <form action="/action_page.php">
+      <form ref="SubmitForm">
+        <div class="relative mb-3">
+          <label for="username" class="text-black font-kanit font-semibold text-xl">Username*</label><br>
+          <input type="text" id="username" name="username" class="w-[26rem] h-12 p-2 rounded placeholder:text-[#9ca3af] focus:outline-none"
+            placeholder="Unique username" v-model="formData.username" required><br>
+        </div>
         <div class="relative mb-3">
           <label for="email" class="text-black font-kanit font-semibold text-xl">Email*</label><br>
-          <input type="text" id="email" name="email" class="w-[26rem] h-12 rounded placeholder:text-[#9ca3af] focus:outline-none"
-            :style="{ 'padding-left': showEmailIcon ? '24px' : '8px' }" placeholder="Your email" v-model="formData.email" @input="toggleEmailIconVisibility" required>
+          <input type="text" id="email" name="email" class="w-[26rem] h-12 p-2 rounded placeholder:text-[#9ca3af] focus:outline-none"
+            placeholder="Your email" v-model="formData.email" required>
         </div>
         <div class="relative mb-3">
-          <label for="psswd" class="text-black font-kanit font-semibold text-xl">Password*</label><br>
-          <input type="text" id="psswd" name="psswd" class="w-[26rem] h-12 rounded placeholder:text-[#9ca3af] focus:outline-none"
-          :style="{ 'padding-left': showPasswordIcon ? '24px' : '8px' }" placeholder="Your password" v-model="formData.psswd" @input="togglePasswordIconVisibility" required><br>
+          <label for="password" class="text-black font-kanit font-semibold text-xl">Password*</label><br>
+          <input type="text" id="password" name="password" class="w-[26rem] h-12 p-2 rounded placeholder:text-[#9ca3af] focus:outline-none"
+            placeholder="Your password" v-model="formData.password" required><br>
         </div>
         <div class="relative">
-          <label for="psswd" class="text-black font-kanit font-semibold text-xl">Date of Birth*</label><br>
+          <label class="text-black font-kanit font-semibold text-xl">Date of Birth*</label><br>
           <div class="flex flex-row justify-between">
             <div v-for="(options, label) in dateOptions" :key="label" class="card flex justify-center items-center"> <!--make date of b required-->
               <div v-if="label === 'Day'">
@@ -200,7 +205,7 @@
               </div>
               <div v-else-if="label === 'Year'">
                 <Dropdown v-model="formData.year" editable :options="options" optionLabel="label" :placeholder="label" optionDisabled="disabled" class="h-12 w-32 rounded bg-white centered-select-text shadow-none"/>
-              </div>
+              </div> <!--if its not editable then placeholder isnt centered; but i dont need it to be editable-->
             </div>
           </div>
         </div>
@@ -225,8 +230,9 @@ export default {
   data() {
     return {
       formData: {
-        name: '',
-        psswd: '',
+        username: '',
+        email: '',
+        password: '',
         day: ref(),
         month: ref(),
         year: ref(),
@@ -236,18 +242,72 @@ export default {
   methods: {
     submitForm() {
       // Send data to the server
-      fetch('http://127.0.0.1:8000/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(this.formData),
-      })
-      .then(response => response.json())
-      .then(data => console.log(data))
-      .catch(error => console.error('Error:', error));
 
-      console.log("posted");
+      const form = this.$refs.SubmitForm;
+      const formElements = form.elements;
+
+      // Reset custom validity and remove red borders
+      for (const element of formElements) {
+        element.setCustomValidity('');
+        element.style.border = '';
+      }
+
+      // Check if the form is valid before submitting
+      if (form.checkValidity()) {
+        // dont need this check if we do validity check first
+        // however ill need to make date fields inputs, so they would be required too
+        // otherwise this check will remain
+        if (
+          this.formData.day && typeof this.formData.day === 'object' &&
+          this.formData.month && typeof this.formData.month === 'object' &&
+          this.formData.year && typeof this.formData.year === 'object'
+        ) {
+          this.formData.day = this.formData.day.value;
+          this.formData.month = this.formData.month.value;
+          this.formData.year = this.formData.year.value;
+        }
+
+        fetch('http://127.0.0.1:8000/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.formData),
+        })
+        .then(response => {
+          if (!response.ok) {
+            // Handle non-successful response codes here
+            if (response.status === 422) {
+              // Handle 422 Unprocessable Entity
+              return response.json().then(errorData => {
+                // Tell them that email form is incorrect
+                throw new Error(`Validation error: ${JSON.stringify(errorData)}`);
+              });
+            } else {
+              // Handle other non-successful response codes
+              throw new Error(`Server error: ${response.status}`);
+            }
+          }
+          return response.json();
+        })
+        .then(data => {
+          localStorage.setItem("token", JSON.stringify(data));
+          console.log(data);
+          console.log(localStorage.getItem("token"));
+        })
+        .catch(error => console.error('Error:', error));
+
+        console.log("posted");
+      } else {
+        // Highlight invalid fields with red borders
+        for (const element of formElements) {
+          if (!element.checkValidity()) {
+            // Some styling here or whatever
+            element.setCustomValidity('Please fill in this field');
+            element.style.border = '0.1em solid red';
+          }
+        }
+      }
     },
   },
 };
