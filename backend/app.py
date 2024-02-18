@@ -9,7 +9,7 @@ from datetime import date
 from asyncpg import Pool, Record, create_pool
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request, Body, Depends
+from fastapi import FastAPI, Request, Body, Depends  # noqa: F401
 from fastapi.middleware.cors import CORSMiddleware
 
 from utils import ENV, UserSchema, UserLoginSchema, signJWT

@@ -259,49 +259,107 @@ export default {
 };
 </script>-->
 
+<script setup>
+import Footer from "../components/Footer.vue";
+  import { ref } from "vue";
+  
+  let input = ref("");
+  const fruits = ["apple", "banana", "orange"];
+  function filteredList() {
+    return fruits.filter((fruit) =>
+      fruit.toLowerCase().includes(input.value.toLowerCase())
+    );
+  }
+</script>
+
 <template>
-  <div>
-    <form @submit.prevent="submitForm">
-      <!-- Your form fields go here -->
-      <input type="button" value="Submit" @click="submitForm">
-    </form>
-  </div>
+  <main>
+    <div class="main mb-footer"> <!-- use mb-footer if you want to see footer-->
+      <div class="w-col"></div>
+        <div class="center">
+          <h1 class="text-8xl my-28">Welcome to Dwello Docs.</h1>
+          <div class="grid grid-cols-1 gap-4 mt-4">
+            <div v-for="(value, key) in commands" :key="key" class="p-4 border rounded shadow-md">
+              <h1 class="text-lg font-bold">{{ key }}</h1>
+              <div v-for="(itemValue, itemKey) in value" :key="itemKey" class="mt-2">
+                <h2 class="text-lg font-semibold">{{ itemKey }}</h2>
+                <p v-html="formatText(itemValue.help)"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <div class="w-col"></div>
+    </div>
+    <Footer />
+  </main>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      formData: {
-        username: '3',
-        email: '4@dd.vom',
-        password: '4t34t35y3y3yr3r',
-        day: 2,
-        month: 3,
-        year: 4,
-      },
+      commands: {}
     };
   },
+  beforeMount() {
+    this.fetchData();
+  },
   methods: {
-    submitForm() {
-      fetch('http://127.0.0.1:8000/login', {
-          method: 'POST',
+    fetchData() {
+      fetch('http://localhost:8081/api/get', {
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(this.formData),
+          }
         })
         .then(response => response.json())
         .then(data => {
-          localStorage.setItem("token", JSON.stringify(data));
+          this.commands = data;
           console.log(data);
-          console.log(localStorage.getItem("token"));
         })
         .catch(error => console.error('Error:', error));
     },
+    formatText(text) {
+      if (!text) return text;
+
+      // Replace **bold** with <strong>bold</strong>
+      text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+      // Replace __underscores__ with <em>underscores</em>
+      text = text.replace(/__(.*?)__/g, "<em>$1</em>");
+
+      // Replace [a link](url) with <a href="url">a link</a>
+      //Doesnt remove the <> within (), so cant properly redirect?
+      text = text.replace(/\[(.*?)\]\(([^)]+?)\)/g, '<a href="$2">$1</a>');
+      console.log(text)
+
+      return text;
+    }
   },
 };
 </script>
 
+
+<!--<script setup>
+import { ref } from "vue";
+let input = ref("");
+const fruits = ["apple", "banana", "orange"];
+function filteredList() {
+  return fruits.filter((fruit) =>
+    fruit.toLowerCase().includes(input.value.toLowerCase())
+  );
+}
+</script>
+
+
+<template>
+  <input type="text" v-model="input" placeholder="Search fruits..." />
+  <div class="item fruit" v-for="fruit in filteredList()" :key="fruit">
+    <p>{{ fruit }}</p>
+  </div>
+  <div class="item error" v-if="input&&!filteredList().length">
+    <p>No results found!</p>
+  </div>
+</template>-->
 
 

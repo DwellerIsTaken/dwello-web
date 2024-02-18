@@ -3,11 +3,11 @@ import time
 from typing import Dict
 
 import jwt
-from ..environment import ENV
+from decouple import config
 
 # fix env
-JWT_SECRET = ENV("JWT_SECRET")
-JWT_ALGORITHM = ENV("JWT_ALGORITHM")
+JWT_SECRET = config("JWT_SECRET")
+JWT_ALGORITHM = config("JWT_ALGORITHM")
 
 
 def token_response(token: str):
