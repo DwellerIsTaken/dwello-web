@@ -1,4 +1,7 @@
 from pydantic import BaseModel, Field, EmailStr
+from typing import Literal
+
+from datetime import datetime
 
 class PostSchema(BaseModel):
     id: int = Field(default=None)
@@ -44,3 +47,37 @@ class UserLoginSchema(BaseModel):
                 "password": "any"
             }
         }
+
+class ZohoEmailSchema(BaseModel):
+    # based off of https://www.zoho.com/mail/help/api/post-send-an-email.html
+
+    toAddress: EmailStr = Field(...)
+    fromAddress: EmailStr
+
+    ccAddress: EmailStr | None = None
+    bccAddress: EmailStr | None = None
+    subject: str | None = None
+    encoding: Literal[
+        "Big5",
+        "EUC-JP",
+        "EUC-KR",
+        "GB2312",
+        "ISO-2022-JP",
+        "ISO-8859-1",
+        "KOI8-R",
+        "Shift_JIS",
+        "US-ASCII",
+        "UTF-8", # default
+        "WINDOWS-1251",
+        "X-WINDOWS-ISO2022JP",
+    ] | None = None
+    mailFormat: Literal["html", "plaintext"] | None = None # "html" is default
+    askReceipt: Literal["yes"] | None = None # "yes" is default
+
+    # read the docs to pass the values correctly
+    isSchedule: bool | None = None
+    scheduleType: Literal[1, 2, 3, 4, 5, 6] | None = None
+    timeZone: str | None = None # maybe datetime in the future
+    scheduleTime: datetime | None = None # MM/DD/YYYY HH:MM
+
+
