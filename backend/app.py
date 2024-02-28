@@ -1,8 +1,9 @@
 # SHOULD BE RUN SEPARATELY
 
 from __future__ import annotations
+import os
 from typing import Any, Callable
-
+from dotenv import load_dotenv
 import uvicorn
 import aiofiles
 import aiohttp
@@ -10,19 +11,20 @@ from decouple import Config
 from datetime import date
 from asyncpg import Pool, Record, create_pool
 from contextlib import asynccontextmanager
-
 from fastapi import FastAPI, Request, Body, Depends  # noqa: F401
 from fastapi.middleware.cors import CORSMiddleware
+from utils import ENV, UserSchema, UserLoginSchema, ZohoEmailSchema, EmailSchema, PasswordSchema, signJWT, decodeJWT
+from fastapi import HTTPException, Request, status
+from jose import JWTError
 
-from utils import ENV, UserSchema, UserLoginSchema, ZohoEmailSchema, signJWT
+load_dotenv()
+# config = Config(".env")
 
-config = Config(".env")
-
-ZOHO_CLIENT_ID = config("ZOHO_CLIENT_ID")
-ZOHO_ACCOUNT_ID = config("ZOHO_ACCOUNT_ID")
-ZOHO_CLIENT_SECRET = config("ZOHO_CLIENT_SECRET")
-ZOHO_REFRESH_TOKEN = config("ZOHO_REFRESH_TOKEN")
-ZOHO_BASE_ACCOUNTS_URL = config('ZOHO_BASE_ACCOUNTS_URL')
+# ZOHO_CLIENT_ID = config("ZOHO_CLIENT_ID")
+# ZOHO_ACCOUNT_ID = config("ZOHO_ACCOUNT_ID")
+# ZOHO_CLIENT_SECRET = config("ZOHO_CLIENT_SECRET")
+# ZOHO_REFRESH_TOKEN = config("ZOHO_REFRESH_TOKEN")
+# ZOHO_BASE_ACCOUNTS_URL = config('ZOHO_BASE_ACCOUNTS_URL')
 
 # keep it within some class maybe, instead of making it a global var
 pool: Pool[Record] | None = None
@@ -44,13 +46,47 @@ async def check_user(data: UserLoginSchema) -> bool:
                 return True
     return False
 
+
+async def get_user_by_email(email):
+    async with pool.acquire() as conn:
+        if record:= await conn.fetchrow("SELECT * FROM client_data WHERE email = $1", email):
+            return record
+    return None
+
+
+async def update_user_password(email: str, new_password: str) -> bool:
+    try:
+        async with pool.acquire() as conn:
+            existing_user = await conn.fetchrow("SELECT * FROM client_data WHERE email = $1", email)
+            if existing_user:
+                await conn.execute("UPDATE client_data SET password = $1 WHERE email = $2", new_password, email)
+                return True
+        return False
+    except:
+        return False
+
+
+async def validate_token(request: Request):
+    try:
+        email = decodeJWT(request.headers.get('Authorization', ''))
+        user = await get_user_by_email(email)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid access token!",
+            )
+        return user
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid access token!")
+
+
 async def create_db_pool() -> Pool[Record]:
     credentials = {
-        "user": ENV["PG_USERNAME"],
-        "password": ENV["PG_PASSWORD"],
-        "database": ENV["PG_NAME"],
-        "host": ENV["PG_HOST"],
-        "port": ENV["PG_PORT"],
+        "user": os.getenv("PG_USERNAME"),
+        "password": os.getenv("PG_PASSWORD"),
+        "database": os.getenv("PG_NAME"),
+        "host": os.getenv("PG_HOST"),
+        "port": os.getenv("PG_PORT"),
     }
     return await create_pool(**credentials)
 
@@ -105,7 +141,7 @@ async def signup(request: Request):
             if record['email'] == email:
                 return {"message": "You already have an account, please log in."}
         await conn.execute("INSERT INTO client_data (email, password) VALUES ($1, $2)", email, password)
-    
+
     # You may want to return a success response here
     return {"message": "Signup successful"}'''
 
@@ -141,6 +177,45 @@ async def user_login(user: UserLoginSchema = Body(...)):
         "error": "Wrong login details!"
     }
 
+
+@app.get("/profile")
+def user_profile(request: Request, current_user = Depends(validate_token)):
+    return {"user": current_user}
+
+
+@app.post("/reset-password")
+async def reset_password(data: EmailSchema):
+    user = await get_user_by_email(data.email)
+
+    if user is None:
+        raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found with this email!",
+            )
+
+    token = signJWT(data.email)
+    return {"link": f"{os.getenv('RESET_PASSWORD_PAGE_URL')}?token={token['access_token']}"}
+
+
+@app.put("/update-password")
+def update_password(data: PasswordSchema, current_user = Depends(validate_token)):
+    if data.new_password != data.confirm_password:
+        raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="New password must match with the confirm password!",
+            )
+
+    is_updated = update_user_password(current_user['email'], data.new_password)
+
+    if not is_updated:
+        raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Something went wrong!",
+            )
+
+    return {"response": "Password updated successfully!"}
+
+
 async def send_an_email(access_token: str, email: ZohoEmailSchema):
     url = f"https://mail.zoho.eu/api/accounts/{ZOHO_ACCOUNT_ID}/messages"
     headers = {"Authorization": f"Zoho-oauthtoken {access_token}"}
@@ -171,7 +246,7 @@ async def send_an_email(access_token: str, email: ZohoEmailSchema):
 
     return response
 
-@app.post("/send_email", tags=["email"])
+'''@app.post("/send_email", tags=["email"])
 async def send_email(email: ZohoEmailSchema = Body(...)):
     response = await send_an_email(config("ZOHO_ACCESS_TOKEN"), email)
     match response.status:
@@ -186,11 +261,11 @@ async def send_email(email: ZohoEmailSchema = Body(...)):
         case _:
             # redirect to the page with that error code
             ...
-        
-    await send_an_email(new_access_token["access_token"], email)
+
+    await send_an_email(new_access_token["access_token"], email)'''
 
 '''async def main():
     my_session = await build_session()'''
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000) 
+    uvicorn.run(app, host="127.0.0.1", port=8000)

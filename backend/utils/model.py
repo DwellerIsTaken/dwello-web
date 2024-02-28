@@ -1,10 +1,11 @@
 from pydantic import BaseModel, Field, EmailStr
-from typing import Literal
+from typing import Literal, Optional
 
 from datetime import datetime
 
+
 class PostSchema(BaseModel):
-    id: int = Field(default=None)
+    id: int = Field(default=None, ge=1)  # Use ge=1 to ensure id is always greater than or equal to 1
     title: str = Field(...)
     content: str = Field(...)
 
@@ -19,7 +20,7 @@ class PostSchema(BaseModel):
 class UserSchema(BaseModel):
     # can add stuff like this later on
     # date of birth; maybe some additional personal data
-    
+
     username: str = Field(...)
     email: EmailStr = Field(...)
     password: str = Field(...)
@@ -48,17 +49,42 @@ class UserLoginSchema(BaseModel):
             }
         }
 
+
+class EmailSchema(BaseModel):
+    email: EmailStr = Field(...)
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "email": "joe@xyz.com",
+            }
+        }
+
+
+class PasswordSchema(BaseModel):
+    new_password: str = Field(...)
+    confirm_password: str = Field(...)
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "new_password": "abc123",
+                "confirm_password": "abc123",
+            }
+        }
+
+
 class ZohoEmailSchema(BaseModel):
     # based off of https://www.zoho.com/mail/help/api/post-send-an-email.html
 
     toAddress: EmailStr = Field(...)
     fromAddress: EmailStr
 
-    ccAddress: EmailStr | None = None
-    bccAddress: EmailStr | None = None
-    subject: str | None = None
-    content: str | None = "Just testing. Sorry for the inconvenience!"
-    encoding: Literal[
+    ccAddress: Optional[EmailStr] = None
+    bccAddress: Optional[EmailStr] = None
+    subject: Optional[str] = None
+    content: Optional[str] = "Just testing. Sorry for the inconvenience!"
+    encoding: Optional[Literal[
         "Big5",
         "EUC-JP",
         "EUC-KR",
@@ -71,14 +97,13 @@ class ZohoEmailSchema(BaseModel):
         "UTF-8", # default
         "WINDOWS-1251",
         "X-WINDOWS-ISO2022JP",
-    ] | None = None
-    mailFormat: Literal["html", "plaintext"] | None = None # "html" is default
-    askReceipt: Literal["yes"] | None = None # "yes" is default
+    ]] = None
+    mailFormat: Optional[Literal["html", "plaintext"]] = None # "html" is default
+    askReceipt: Optional[Literal["yes"]] = None # "yes" is default
 
     # read the docs to pass the values correctly
-    isSchedule: bool | None = None
-    scheduleType: Literal[1, 2, 3, 4, 5, 6] | None = None
-    timeZone: str | None = None # maybe datetime in the future
-    scheduleTime: datetime | None = None # MM/DD/YYYY HH:MM
-
+    isSchedule: Optional[bool] = None
+    scheduleType: Optional[Literal[1, 2, 3, 4, 5, 6]] = None
+    timeZone: Optional[str] = None # maybe datetime in the future
+    scheduleTime: Optional[datetime] = None # MM/DD/YYYY HH:MM
 

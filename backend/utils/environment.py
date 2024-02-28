@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Union
 
 import contextlib
 import json
@@ -69,7 +70,7 @@ class Null:
         return self
 
 
-ANY = Null | str | list | bool | dict | int | None
+ANY = Union[Null, str, list, bool, dict, int, None]
 
 
 class Environment:
