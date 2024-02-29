@@ -13,7 +13,7 @@
         <div class="max-w-xs">
           <p class="text-black font-kanit text-[1rem] text-center">No problem! Please enter your email address to receive a link for password reset.</p>
         </div>
-        <form action="/action_page.php">
+        <form action="">
           <div class="relative">
             <label for="email" class="text-yellow font-kanit font-semibold text-xl">Email*</label><br>
             <div class="absolute top-10 left-1" v-if="showEmailIcon">
@@ -60,6 +60,7 @@
             "toAddress": this.emailInput,
             "subject": "Email - Always and Forever",
             "content": "Email can never be dead. The most neutral and effective way, that can be used for one to many and two way communication.",
+            "mailFormat": "plaintext",
             "encoding": "UTF-8"
           }),
         })

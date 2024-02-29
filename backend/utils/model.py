@@ -57,6 +57,7 @@ class ZohoEmailSchema(BaseModel):
     ccAddress: EmailStr | None = None
     bccAddress: EmailStr | None = None
     subject: str | None = None
+    content: str | None = "Just testing. Sorry for the inconvenience!"
     encoding: Literal[
         "Big5",
         "EUC-JP",

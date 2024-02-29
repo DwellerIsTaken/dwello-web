@@ -158,7 +158,8 @@ async def send_an_email(access_token: str, email: ZohoEmailSchema):
             "isSchedule": email.isSchedule,
             "scheduleType": email.scheduleType,
             "timeZone": email.timeZone,
-            "scheduleTime": email.scheduleTime
+            "scheduleTime": email.scheduleTime,
+            "content": email.content, # whether its an html or plaintext
         }.items()
         if value is not None
     }
