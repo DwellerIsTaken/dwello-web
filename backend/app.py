@@ -185,7 +185,7 @@ def user_profile(request: Request, current_user = Depends(validate_token)):
 
 @app.post("/reset-password")
 async def reset_password(data: EmailSchema):
-    user = await get_user_by_email(data.email)
+    user = await get_user_by_email(data.toAddress)
 
     if user is None:
         raise HTTPException(
@@ -193,8 +193,8 @@ async def reset_password(data: EmailSchema):
                 detail="User not found with this email!",
             )
 
-    token = signJWT(data.email)
-    return {"link": f"{os.getenv('RESET_PASSWORD_PAGE_URL')}?token={token['access_token']}"}
+    token = signJWT(data.toAddress)
+    return {"link": f"http://localhost:5173/update-password?token={token['access_token']}"}
 
 
 @app.put("/update-password")
@@ -217,6 +217,17 @@ def update_password(data: PasswordSchema, current_user = Depends(validate_token)
 
 
 async def send_an_email(access_token: str, email: ZohoEmailSchema):
+    user = await get_user_by_email(email.toAddress)
+
+    if user is None:
+        raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found with this email!",
+            )
+
+    token = signJWT(email.toAddress)
+    reset_password_link = f"http://localhost:5173/update-password?token={token['access_token']}"
+
     url = f"https://mail.zoho.eu/api/accounts/{ZOHO_ACCOUNT_ID}/messages"
     headers = {"Authorization": f"Zoho-oauthtoken {access_token}"}
     data = {
@@ -234,8 +245,8 @@ async def send_an_email(access_token: str, email: ZohoEmailSchema):
             "scheduleType": email.scheduleType,
             "timeZone": email.timeZone,
             "scheduleTime": email.scheduleTime,
-            "content": email.content, # whether its an html or plaintext
-            # you can pass the password renewal link as a parameter, or just put it in here for now and ill expand everything later
+            "content": email.content, # whether its an html or plaintext,
+            "resetPasswordLink": reset_password_link # you can pass the password renewal link as a parameter, or just put it in here for now and ill expand everything later
         }.items()
         if value is not None
     }

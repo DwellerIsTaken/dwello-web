@@ -51,12 +51,12 @@ class UserLoginSchema(BaseModel):
 
 
 class EmailSchema(BaseModel):
-    email: EmailStr = Field(...)
+    toAddress: EmailStr = Field(...)
 
     class Config:
         schema_extra = {
             "example": {
-                "email": "joe@xyz.com",
+                "toAddress": "joe@xyz.com",
             }
         }
 
