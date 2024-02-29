@@ -60,6 +60,7 @@
             "toAddress": this.emailInput,
             "subject": "Email - Always and Forever",
             "content": "Email can never be dead. The most neutral and effective way, that can be used for one to many and two way communication.",
+            // content isnt required, so you can just pass generated password renewal link in send_an_email in app.py 
             "mailFormat": "plaintext",
             "encoding": "UTF-8"
           }),

@@ -160,6 +160,7 @@ async def send_an_email(access_token: str, email: ZohoEmailSchema):
             "timeZone": email.timeZone,
             "scheduleTime": email.scheduleTime,
             "content": email.content, # whether its an html or plaintext
+            # you can pass the password renewal link as a parameter, or just put it in here for now and ill expand everything later
         }.items()
         if value is not None
     }
