@@ -10,7 +10,7 @@ import Home from "./views/Home.vue";
 import Login from "./views/Login.vue";
 import Signup from "./views/Signup.vue";
 import NewPassword from "./views/NewPassword.vue";
-import EnterNewPassword from "./views/EnterNewPassword.vue";
+import UpdatePassword from "./views/UpdatePassword.vue";
 import Test from "./views/Test.vue";
 
 import "./style.css";
@@ -21,7 +21,7 @@ const routes = [
   { path: "/login", component: Login },
   { path: "/signup", component: Signup },
   { path: "/send-password", component: NewPassword },
-  { path: "/renew-password", component: EnterNewPassword },
+  { path: "/update-password", component: UpdatePassword },
   { path: "/test", component: Test },
 ];
 
