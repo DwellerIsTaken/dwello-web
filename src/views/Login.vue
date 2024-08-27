@@ -116,6 +116,7 @@ export default {
           return response.json();
         })
         .then(data => {
+          this.$router.push('/');
           localStorage.setItem("token", JSON.stringify(data));
           console.log(data);
           console.log(localStorage.getItem("token"));

@@ -1,9 +1,7 @@
 # SHOULD BE RUN SEPARATELY
 
 from __future__ import annotations
-import os
 from typing import Any, Callable
-from dotenv import load_dotenv
 import uvicorn
 import aiofiles
 import aiohttp
@@ -11,20 +9,19 @@ from decouple import Config
 from datetime import date
 from asyncpg import Pool, Record, create_pool
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request, Body, Depends  # noqa: F401
+from fastapi import HTTPException, FastAPI, Request, status, Body, Depends  # noqa: F401
 from fastapi.middleware.cors import CORSMiddleware
 from utils import ENV, UserSchema, UserLoginSchema, ZohoEmailSchema, EmailSchema, PasswordSchema, signJWT, decodeJWT
-from fastapi import HTTPException, Request, status
 from jose import JWTError
 
-load_dotenv()
-# config = Config(".env")
 
-# ZOHO_CLIENT_ID = config("ZOHO_CLIENT_ID")
-# ZOHO_ACCOUNT_ID = config("ZOHO_ACCOUNT_ID")
-# ZOHO_CLIENT_SECRET = config("ZOHO_CLIENT_SECRET")
-# ZOHO_REFRESH_TOKEN = config("ZOHO_REFRESH_TOKEN")
-# ZOHO_BASE_ACCOUNTS_URL = config('ZOHO_BASE_ACCOUNTS_URL')
+config = Config(".env")
+
+ZOHO_CLIENT_ID = config("ZOHO_CLIENT_ID")
+ZOHO_ACCOUNT_ID = config("ZOHO_ACCOUNT_ID")
+ZOHO_CLIENT_SECRET = config("ZOHO_CLIENT_SECRET")
+ZOHO_REFRESH_TOKEN = config("ZOHO_REFRESH_TOKEN")
+ZOHO_BASE_ACCOUNTS_URL = config('ZOHO_BASE_ACCOUNTS_URL')
 
 # keep it within some class maybe, instead of making it a global var
 pool: Pool[Record] | None = None
@@ -32,12 +29,6 @@ ml_models: dict[Callable[..., Any | None]] = {}
 
 session: aiohttp.ClientSession | None = None
 
-'''class MySession:
-    def __init__(self, session):
-        self._session = session
-
-async def build_session():
-    return MySession(aiohttp.ClientSession())'''
 
 async def check_user(data: UserLoginSchema) -> bool:
     async with pool.acquire() as conn:
@@ -62,7 +53,7 @@ async def update_user_password(email: str, new_password: str) -> bool:
                 await conn.execute("UPDATE client_data SET password = $1 WHERE email = $2", new_password, email)
                 return True
         return False
-    except:
+    except:  # noqa: E722
         return False
 
 
@@ -82,11 +73,11 @@ async def validate_token(request: Request):
 
 async def create_db_pool() -> Pool[Record]:
     credentials = {
-        "user": os.getenv("PG_USERNAME"),
-        "password": os.getenv("PG_PASSWORD"),
-        "database": os.getenv("PG_NAME"),
-        "host": os.getenv("PG_HOST"),
-        "port": os.getenv("PG_PORT"),
+        "user": ENV["PG_USERNAME"],
+        "password": ENV["PG_PASSWORD"],
+        "database": ENV["PG_NAME"],
+        "host": ENV["PG_HOST"],
+        "port": ENV["PG_PORT"],
     }
     return await create_pool(**credentials)
 
@@ -173,7 +164,7 @@ async def create_user(user: UserSchema = Body(...)):
 async def user_login(user: UserLoginSchema = Body(...)):
     if await check_user(user):
         return signJWT(user.email)
-    return {
+    return { # return an http exception 401
         "error": "Wrong login details!"
     }
 
@@ -189,29 +180,29 @@ async def reset_password(data: EmailSchema):
 
     if user is None:
         raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found with this email!",
-            )
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found with this email!",
+        )
 
     token = signJWT(data.toAddress)
     return {"link": f"http://localhost:5173/update-password?token={token['access_token']}"}
 
 
 @app.put("/update-password")
-def update_password(data: PasswordSchema, current_user = Depends(validate_token)):
+async def update_password(data: PasswordSchema, current_user = Depends(validate_token)):
     if data.new_password != data.confirm_password:
         raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="New password must match with the confirm password!",
-            )
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="New password must match with the confirm password!",
+        )
 
-    is_updated = update_user_password(current_user['email'], data.new_password)
+    is_updated = await update_user_password(current_user['email'], data.new_password)
 
     if not is_updated:
         raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Something went wrong!",
-            )
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Something went wrong!",
+        )
 
     return {"response": "Password updated successfully!"}
 
@@ -221,9 +212,9 @@ async def send_an_email(access_token: str, email: ZohoEmailSchema):
 
     if user is None:
         raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found with this email!",
-            )
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found with this email!",
+        )
 
     token = signJWT(email.toAddress)
     reset_password_link = f"http://localhost:5173/update-password?token={token['access_token']}"
@@ -245,8 +236,8 @@ async def send_an_email(access_token: str, email: ZohoEmailSchema):
             "scheduleType": email.scheduleType,
             "timeZone": email.timeZone,
             "scheduleTime": email.scheduleTime,
-            "content": email.content, # whether its an html or plaintext,
-            "resetPasswordLink": reset_password_link # you can pass the password renewal link as a parameter, or just put it in here for now and ill expand everything later
+            "content": reset_password_link, # whether its an html or plaintext, #email.content
+            #"resetPasswordLink": reset_password_link # you can pass the password renewal link as a parameter, or just put it in here for now and ill expand everything later
         }.items()
         if value is not None
     }
@@ -257,7 +248,7 @@ async def send_an_email(access_token: str, email: ZohoEmailSchema):
 
     return response
 
-'''@app.post("/send_email", tags=["email"])
+@app.post("/send_email", tags=["email"])
 async def send_email(email: ZohoEmailSchema = Body(...)):
     response = await send_an_email(config("ZOHO_ACCESS_TOKEN"), email)
     match response.status:
@@ -273,7 +264,7 @@ async def send_email(email: ZohoEmailSchema = Body(...)):
             # redirect to the page with that error code
             ...
 
-    await send_an_email(new_access_token["access_token"], email)'''
+    await send_an_email(new_access_token["access_token"], email)
 
 '''async def main():
     my_session = await build_session()'''

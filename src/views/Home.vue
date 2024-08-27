@@ -152,6 +152,9 @@ export default {
       calculatedOpacity: 0,
     };
   },
+  created() {
+    // check if the token is in local storage, if so remove the login button and add dashboard button instead and maybe a profile icon in the corner
+  },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
   },
@@ -172,3 +175,13 @@ export default {
   },
 };
 </script>
+
+<!--
+  NOTES FROM HAMMAD
+
+  1. When the user logs in, a token will be returned from the API and you will save that token to the local storage on frontend
+
+  2. ⁠And then with each call to the backend API, you will extract the token from local storage and add that token in the headers API request from the frontend. The header name should be Authorization with the token as a value
+
+  3. ⁠And if you receive (401 unauthorized) error code in the response of any API request, you will remove the token from local storage and redirect the user to the login page, this will automatically logout the user
+-->

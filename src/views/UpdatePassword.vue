@@ -63,39 +63,39 @@
         this.$router.go(-1);
       },
       submitForm() {
-      if (this.passwordInput !== this.confirmPasswordInput) {
-        alert("New password and confirm password do not match.");
-        return;
-      }
+        if (this.passwordInput !== this.confirmPasswordInput) {
+          alert("New password and confirm password do not match.");
+          return;
+        }
 
-      const token = new URLSearchParams(window.location.search).get("token");
+        const token = new URLSearchParams(window.location.search).get("token");
 
-      fetch("http://127.0.0.1:8000/update-password", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({
-          new_password: this.passwordInput,
-          confirm_password: this.confirmPasswordInput,
-        }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            return response.json().then((errorData) => {
-              alert(errorData.detail);
-              throw new Error(`Error: ${errorData.detail}`);
-            });
-          }
-          return response.json();
+        fetch("http://127.0.0.1:8000/update-password", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify({
+            new_password: this.passwordInput,
+            confirm_password: this.confirmPasswordInput,
+          }),
         })
-        .then((data) => {
-          alert("Password updated successfully!");
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+          .then((response) => {
+            if (!response.ok) {
+              return response.json().then((errorData) => {
+                alert(errorData.detail);
+                throw new Error(`Error: ${errorData.detail}`);
+              });
+            }
+            return response.json();
+          })
+          .then((data) => {
+            alert("Password updated successfully!");
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
       },
     },
   };

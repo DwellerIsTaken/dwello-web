@@ -76,7 +76,7 @@
         .then(data => {
             alert('An email has been sent to you with the email to reset password!');
         });
-      }
+      },
       // I think we don't need the below part, please take a look if you think it is important
       // submitForm() {
       //   fetch('http://127.0.0.1:8000/send_email', {
